@@ -1,2 +1,7 @@
 language: java
 script: mvn test
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+  - env:
+      global:
+        - CODECOV_TOKEN="f2ec1e2f-dc74-4c7c-bca8-57a46c42f3ee"
