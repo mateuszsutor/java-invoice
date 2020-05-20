@@ -1,6 +1,7 @@
 package pl.edu.agh.mwo.invoice.product;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 public class Product implements Comparable<Product> {
@@ -50,6 +51,15 @@ public class Product implements Comparable<Product> {
         return Objects.equals(name, product.name)
                 && Objects.equals(price, product.price)
                 && Objects.equals(taxPercent, product.taxPercent);
+    }
+
+    @Override
+    public String toString() {
+        BigDecimal multiplierValue = new BigDecimal("100");
+        return "Product name: " + name
+                + ", cena:" + price
+                + ", Vat:"
+                + (taxPercent.setScale(2, RoundingMode.HALF_DOWN).multiply(multiplierValue));
     }
 
     @Override

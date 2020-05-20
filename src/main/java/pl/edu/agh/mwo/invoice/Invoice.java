@@ -51,6 +51,12 @@ public class Invoice {
         return totalGross;
     }
 
+    public BigDecimal getGrossOneProduct(Map<Product, Integer> products) {
+        BigDecimal productPrice = BigDecimal.ZERO;
+
+        return productPrice;
+    }
+
     public Map<Product, Integer> getProducts() {
         return products;
     }
@@ -67,5 +73,6 @@ public class Invoice {
     public int getInvoiceNumber() {
         return invoiceNumber;
     }
+
 
 }
