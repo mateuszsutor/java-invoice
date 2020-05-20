@@ -1,17 +1,17 @@
 package pl.edu.agh.mwo.invoice;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import pl.edu.agh.mwo.invoice.product.Product;
 
 public class Invoice {
 
     private int invoiceNumber;
 
-    private static int nextNumber = 0;
+    private static int nextNumber = 1;
 
-    private Map<Product, Integer> products = new HashMap<Product, Integer>();
+    private Map<Product, Integer> products = new TreeMap<>();
 
     public Invoice() {
         this.invoiceNumber = nextNumber;
@@ -51,7 +51,21 @@ public class Invoice {
         return totalGross;
     }
 
+    public Map<Product, Integer> getProducts() {
+        return products;
+    }
+
+    public void containsProduct(Product product, Map<Product, Integer> products) {
+        int count = 0;
+
+        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+            System.out.println(entry.getKey() + "/" + entry.getValue());
+        }
+
+    }
+
     public int getInvoiceNumber() {
         return invoiceNumber;
     }
+
 }
