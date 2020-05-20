@@ -37,6 +37,9 @@ public class DemoApp {
         invoice2.addProduct(product4);
         invoice2.addProduct(product5);
         invoice2.addProduct(product6);
+        invoice2.addProduct(product6);
+        invoice2.addProduct(product6);
+        invoice2.addProduct(product6);
 
         PrintInvoice printer = new PrintInvoice();
 
