@@ -40,10 +40,9 @@
             </plugin>
 
             <plugin>
-
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.2</version>
+                    <version>0.8.5</version>
                     <executions>
                         <execution>
                             <goals>
@@ -58,7 +57,6 @@
                             </goals>
                         </execution>
                     </executions>
-
             </plugin>
 
             <plugin>
@@ -68,7 +66,7 @@
                 <configuration>
                     <forkCount>3</forkCount>
                     <reuseForks>true</reuseForks>
-                    <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
+                    <argLine>-Xmx1024m ${argLine} -XX:MaxPermSize=256m</argLine>
                 </configuration>
             </plugin>
         </plugins>
