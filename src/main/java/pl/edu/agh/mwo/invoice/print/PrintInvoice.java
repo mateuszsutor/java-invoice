@@ -13,8 +13,10 @@ public class PrintInvoice {
     public static final int WIDTH_SIZE = 106;
     public static final String CURRENCY_POLAND = " Zł";
 
+
     public void printInvoice(Invoice invoice) {
-        System.out.println();
+        StringBuilder sb = new StringBuilder();
+
         printTitles(invoice);
         printHeaders();
 
@@ -49,7 +51,7 @@ public class PrintInvoice {
 
     public void printTitles(Invoice invoice) {
         Date todayDate = new Date();
-        decorator();
+        System.out.println(decorator());
         printEmptyRow();
         System.out.printf("| %-44s  %44s %td-%<tb-%<tY |", "Faktura numer: "
                 + invoice.getInvoiceNumber(), "Wystawiona dnia:", todayDate);
@@ -72,11 +74,14 @@ public class PrintInvoice {
         decorator();
     }
 
-    public void decorator() {
+    public String decorator() {
+        StringBuilder sb = new StringBuilder();
         char decor = '-';
+
         for (int i = 0; i < WIDTH_SIZE; i++) {
-            System.out.print(decor);
+            sb.append(decor);
         }
+        return sb.toString();
     }
 
     public void printEmptyRow() {
