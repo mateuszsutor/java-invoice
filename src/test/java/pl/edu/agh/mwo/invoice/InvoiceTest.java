@@ -1,6 +1,8 @@
 package pl.edu.agh.mwo.invoice;
 
 import java.math.BigDecimal;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
@@ -11,10 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 import pl.edu.agh.mwo.invoice.Invoice;
-import pl.edu.agh.mwo.invoice.product.DairyProduct;
-import pl.edu.agh.mwo.invoice.product.OtherProduct;
-import pl.edu.agh.mwo.invoice.product.Product;
-import pl.edu.agh.mwo.invoice.product.TaxFreeProduct;
+import pl.edu.agh.mwo.invoice.product.*;
 
 public class InvoiceTest {
     private Invoice invoice;
@@ -108,6 +107,11 @@ public class InvoiceTest {
         invoice.addProduct(new DairyProduct("Zsiadle mleko", new BigDecimal("5.55")), -1);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvoiceWithNullProduct() {
+        invoice.addProduct(null);
+    }
+
     @Test
     public void testInvoiceNumbersMustBeDifferent() {
         int invoiceNumber = invoice.getInvoiceNumber();
@@ -122,7 +126,29 @@ public class InvoiceTest {
         assertEquals(invoiceNumber + 1, invoiceNumber2);
     }
 
+    @Test
+    public void testDuplicatesAddThisSameProduct(){
+        //add this same product 3 times
+        invoice.addProduct(new BottleOfWine("ElSol", new BigDecimal("10")));
+        invoice.addProduct(new BottleOfWine("ElSol", new BigDecimal("10")), 5);
+        invoice.addProduct(new BottleOfWine("ElSol", new BigDecimal("10")), 20);
+        Map<Product, Integer> products = invoice.getProducts();
 
+        int expectedSizeMap = 1;
 
+        Assert.assertEquals(expectedSizeMap, products.size());
+    }
 
+    @Test
+    public void testInvoiceHasProperNetTotalForManyProducts() {
+        invoice.addProduct(new TaxFreeProduct("Owoce", new BigDecimal("200")));
+        invoice.addProduct(new DairyProduct("Maslanka", new BigDecimal("100")));
+        invoice.addProduct(new OtherProduct("Wino", new BigDecimal("10")));
+        BigDecimal getNetTotal = invoice.getNetTotal();
+
+        BigDecimal expectedValue = new BigDecimal("310");
+
+        Assert.assertEquals(expectedValue, getNetTotal );
+
+    }
 }

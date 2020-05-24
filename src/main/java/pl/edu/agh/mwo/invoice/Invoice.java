@@ -55,28 +55,12 @@ public class Invoice {
         return totalGross;
     }
 
-    public BigDecimal getGrossOneProduct(Map<Product, Integer> products) {
-        BigDecimal productPrice = BigDecimal.ZERO;
-
-        return productPrice;
-    }
-
     public Map<Product, Integer> getProducts() {
         return products;
-    }
-
-    public void containsProduct(Product product, Map<Product, Integer> products) {
-        int count = 0;
-
-        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
-            System.out.println(entry.getKey() + "/" + entry.getValue());
-        }
-
     }
 
     public int getInvoiceNumber() {
         return invoiceNumber;
     }
-
 
 }
