@@ -32,20 +32,10 @@ public class DemoApp {
         invoice1.addProduct(product5);
         invoice1.addProduct(product6);
 
-        Invoice invoice2 = new Invoice();
-        invoice2.addProduct(product3);
-        invoice2.addProduct(product4);
-        invoice2.addProduct(product5);
-        invoice2.addProduct(product6);
-        invoice2.addProduct(product6);
-        invoice2.addProduct(product6);
-        invoice2.addProduct(product6);
-
         PrintInvoice printer = new PrintInvoice();
-
         System.out.println(printer.showInvoice(invoice1));
 
-        printer.showInvoice(invoice2);
+
 
     }
 }
