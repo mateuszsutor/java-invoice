@@ -4,9 +4,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import pl.edu.agh.mwo.invoice.Invoice;
+import pl.edu.agh.mwo.invoice.product.Product;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 /**
@@ -46,6 +49,7 @@ public class PrintInvoiceTest {
         Assert.assertEquals(value, generateHeader);
     }
 
+
     @Test
     public void testGenerateRow() {
         int id = 10;
@@ -68,6 +72,15 @@ public class PrintInvoiceTest {
     }
 
     @Test
+    public void testGeneratingRowsWithPosition() {
+        String expectContent = "Test";
+
+//        String generateRowsWithPosition = printInvoice.generateRowsWithPosition();
+
+//        Assert.assertEquals(expectContent, generateRowsWithPosition);
+    }
+
+    @Test
     public void testGenerateInvoiceHeader() {
         Date todayDate = new Date();
         String value = String.format("| %-44s  %44s %td-%<tb-%<tY |", "Faktura numer: "
@@ -85,15 +98,18 @@ public class PrintInvoiceTest {
     }
 
     @Test
-    public void testGenerateSummary() {
+    public void testGenerateSummaryForOneProduct() {
+        Map<Product, Integer> products = new TreeMap<>();
+        Product TestProduct = new Product("TestProduct", new BigDecimal("100"), new BigDecimal("0.23"));
 
-        String testSummary = printInvoice.generateSummary(100, new BigDecimal("23"),
-                new BigDecimal("100"), new BigDecimal("123"));
+        invoice.addProduct(TestProduct);
 
         String expectedSummary = String.format("|%-28s | %5d | %14s | %22s | %22s |",
-                "", 100, "100" + printInvoice.CURRENCY_POLAND,
-                "23" + printInvoice.CURRENCY_POLAND,
-                123 + printInvoice.CURRENCY_POLAND);
+                "", products.keySet().size(), "23.00" + printInvoice.CURRENCY_POLAND,
+                "100.00" + printInvoice.CURRENCY_POLAND,
+                "123.00" + printInvoice.CURRENCY_POLAND);
+
+        String testSummary = printInvoice.generateSummary(invoice, products);
 
         Assert.assertEquals(expectedSummary, testSummary);
     }
@@ -192,11 +208,27 @@ public class PrintInvoiceTest {
 
     @Test
     public void testPrintingSummary() {
+        StringBuilder expectedDecorator = new StringBuilder();
+        char decor = '-';
+        for (int i = 0; i < WIDTH_SIZE; i++) {
+            expectedDecorator.append(decor);
+        }
 
-        Integer quantity = 10;
-        BigDecimal taxPercent = new BigDecimal("0.23");
-        BigDecimal summaryNetValue = new BigDecimal("100");
-        BigDecimal summaryValueWithTax = summaryNetValue.multiply(taxPercent);
+        Map<Product, Integer> products = invoice.getProducts();
+        String generateSummaryHeader = printInvoice.generateSummary(invoice, products);
+
+        StringBuilder expectedPrintingSummary = new StringBuilder();
+        expectedPrintingSummary.append(generateSummaryHeader);
+        expectedPrintingSummary.append("\n");
+        expectedPrintingSummary.append(expectedDecorator);
+
+        String printingSummaryValue = printInvoice.printSummary(invoice, products);
+
+        Assert.assertEquals(expectedPrintingSummary.toString(), printingSummaryValue);
+    }
+
+    @Test
+    public void testPrintingTitles() {
 
         StringBuilder expectedDecorator = new StringBuilder();
         char decor = '-';
@@ -204,18 +236,21 @@ public class PrintInvoiceTest {
             expectedDecorator.append(decor);
         }
 
-        String generateSummaryHeader = printInvoice.generateSummary(quantity, taxPercent,
-                summaryNetValue, summaryValueWithTax);
+        String expectedEmptyRow = String.format("\n| %102s |\n", "");
+        String expectedTitle = printInvoice.generateTitle(invoice);
 
-        StringBuilder expectedPrintingSummary = new StringBuilder();
-        expectedPrintingSummary.append(generateSummaryHeader);
-        expectedPrintingSummary.append("\n");
-        expectedPrintingSummary.append(expectedDecorator);
+        StringBuilder expectedPrintingTitle = new StringBuilder();
+        expectedPrintingTitle.append(expectedDecorator);
+        expectedPrintingTitle.append(expectedEmptyRow);
+        expectedPrintingTitle.append(expectedTitle);
+        expectedPrintingTitle.append(expectedEmptyRow);
+        expectedPrintingTitle.append(expectedDecorator);
+        expectedPrintingTitle.append("\n");
 
-        String printingSummaryValue = printInvoice.printSummary(quantity, taxPercent,
-                summaryNetValue, summaryValueWithTax);
+        String printingTitleValue = printInvoice.printTitles(invoice);
 
-        Assert.assertEquals(expectedPrintingSummary.toString(), printingSummaryValue);
+        Assert.assertEquals(expectedPrintingTitle.toString(), printingTitleValue);
+
     }
 
     @Test
@@ -245,5 +280,27 @@ public class PrintInvoiceTest {
         String printingSummaryHeader = printInvoice.printSummaryHeaders();
 
         Assert.assertEquals(expectedSummaryHeader.toString(), printingSummaryHeader);
+    }
+
+    @Test
+    public void testShowEmptyInvoiceLayout() {
+        Map<Product, Integer> products = new TreeMap<>();
+
+        String printTitles = printInvoice.printTitles(invoice);
+        String printHeaders = printInvoice.printHeaders();
+        String printSummaryHeaders = printInvoice.printSummaryHeaders();
+        String printSummary = printInvoice.printSummary(invoice, products);
+        String printSayGoodbye = printInvoice.printSayGoodbye();
+
+        StringBuilder expectedInvoiceLayout = new StringBuilder();
+        expectedInvoiceLayout.append(printTitles);
+        expectedInvoiceLayout.append(printHeaders);
+        expectedInvoiceLayout.append(printSummaryHeaders);
+        expectedInvoiceLayout.append(printSummary);
+        expectedInvoiceLayout.append(printSayGoodbye);
+
+        String invoiceLayoutValue = printInvoice.showInvoice(invoice);
+
+        Assert.assertEquals(expectedInvoiceLayout.toString(), invoiceLayoutValue);
     }
 }

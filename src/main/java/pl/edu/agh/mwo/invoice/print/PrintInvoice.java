@@ -15,18 +15,25 @@ public class PrintInvoice {
 
 
     public String showInvoice(Invoice invoice) {
+        Map<Product, Integer> products = invoice.getProducts();
 
         StringBuilder invoiceTemplate = new StringBuilder();
 
         invoiceTemplate.append(printTitles(invoice));
         invoiceTemplate.append(printHeaders());
+        invoiceTemplate.append(generateRowsWithPosition(invoice));
+        invoiceTemplate.append(printSummaryHeaders());
+        invoiceTemplate.append(printSummary(invoice, products));
+        invoiceTemplate.append(printSayGoodbye());
 
+        return invoiceTemplate.toString();
+    }
+
+    public String generateRowsWithPosition(Invoice invoice) {
+
+        StringBuilder tempRows = new StringBuilder();
         Map<Product, Integer> products = invoice.getProducts();
         int tempId = 1;
-        Integer quantityAll = products.values().size();
-        BigDecimal grossTotal = invoice.getGrossTotal()
-                .setScale(2, RoundingMode.HALF_EVEN);
-        BigDecimal taxTotal = invoice.getTaxTotal().setScale(2, RoundingMode.HALF_EVEN);
 
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {
 
@@ -39,19 +46,14 @@ public class PrintInvoice {
             BigDecimal tax = netValue.multiply(key.getTaxPercent());
             BigDecimal grossValue = netValue.add(tax).setScale(2, RoundingMode.HALF_EVEN);
 
-            invoiceTemplate.append(printRows(tempId, key.getName(),
+
+            tempRows.append(printRows(tempId, key.getName(),
                     value, key.getPrice(), taxToShow,
                     netValue, grossValue));
             tempId++;
         }
-        invoiceTemplate.append(printSummaryHeaders());
 
-        invoiceTemplate.append(printSummary(quantityAll,
-                invoice.getNetTotal(), taxTotal, grossTotal));
-
-        invoiceTemplate.append(printSayGoodbye());
-
-        return invoiceTemplate.toString();
+        return tempRows.toString();
     }
 
     public String generateTitle(Invoice invoice) {
@@ -59,10 +61,8 @@ public class PrintInvoice {
 
         String titlesTemplate = String.format("| %-44s  %44s %td-%<tb-%<tY |", "Faktura numer: "
                 + invoice.getInvoiceNumber(), "Wystawiona dnia:", todayDate);
-        StringBuilder title = new StringBuilder();
-        title.append(title);
-        title.append("\n");
-        return titlesTemplate.toString();
+
+        return titlesTemplate;
     }
 
 
@@ -162,24 +162,27 @@ public class PrintInvoice {
 
     }
 
-    public String generateSummary(Integer quantity, BigDecimal taxPercent,
-                                  BigDecimal summaryNetValue,
-                                  BigDecimal summaryValueWithTax) {
+    public String generateSummary(Invoice invoice, Map<Product, Integer> products) {
+
+        Integer quantityAll = products.values().size();
+        BigDecimal grossTotal = invoice.getGrossTotal()
+                .setScale(2, RoundingMode.HALF_EVEN);
+        BigDecimal netTotal = invoice.getNetTotal()
+                .setScale(2, RoundingMode.HALF_EVEN);
+        BigDecimal taxTotal = invoice.getTaxTotal().setScale(2, RoundingMode.HALF_EVEN);
 
         String summary = String.format("|%-28s | %5d | %14s | %22s | %22s |",
-                "", quantity, summaryNetValue + CURRENCY_POLAND,
-                taxPercent + CURRENCY_POLAND,
-                summaryValueWithTax + CURRENCY_POLAND);
+                "", quantityAll, taxTotal.setScale(2) + CURRENCY_POLAND,
+                netTotal.setScale(2) + CURRENCY_POLAND,
+                grossTotal.setScale(2) + CURRENCY_POLAND);
 
         return summary;
     }
 
-    public String printSummary(Integer quantity, BigDecimal taxPercent,
-                               BigDecimal summaryNetValue,
-                               BigDecimal summaryValueWithTax) {
+    public String printSummary(Invoice invoice, Map<Product, Integer> products) {
 
         StringBuilder summary = new StringBuilder();
-        summary.append(generateSummary(quantity, taxPercent, summaryNetValue, summaryValueWithTax));
+        summary.append(generateSummary(invoice, products));
         summary.append("\n");
         summary.append(decorator());
 
