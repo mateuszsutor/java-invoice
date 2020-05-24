@@ -12,14 +12,22 @@ public class Product implements Comparable<Product> {
 
     private final BigDecimal taxPercent;
 
+    private BigDecimal excise = new BigDecimal("5.56");
+
     public Product(String name, BigDecimal price, BigDecimal tax) {
         if (name == null || name.equals("") || price == null
                 || tax == null || tax.compareTo(new BigDecimal(0)) < 0
                 || price.compareTo(new BigDecimal(0)) < 0) {
             throw new IllegalArgumentException();
         }
+
+        if (!Product.this.getClass().isAssignableFrom(FuelCanister.class)
+                && !Product.this.getClass().isAssignableFrom(BottleOfWine.class)) {
+            this.price = price;
+        } else {
+            this.price = price.add(excise);
+        }
         this.name = name;
-        this.price = price;
         this.taxPercent = tax;
     }
 

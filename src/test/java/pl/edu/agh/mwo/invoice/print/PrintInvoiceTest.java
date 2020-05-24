@@ -1,9 +1,12 @@
 package pl.edu.agh.mwo.invoice.print;
 
+import org.hamcrest.collection.IsMapContaining;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import pl.edu.agh.mwo.invoice.Invoice;
+import pl.edu.agh.mwo.invoice.product.DairyProduct;
+import pl.edu.agh.mwo.invoice.product.OtherProduct;
 import pl.edu.agh.mwo.invoice.product.Product;
 
 import java.math.BigDecimal;
@@ -19,11 +22,12 @@ public class PrintInvoiceTest {
 
     private static final int WIDTH_SIZE = 106;
     private PrintInvoice printInvoice;
-    private Invoice invoice = new Invoice();
+    private Invoice invoice;
 
     @Before
     public void createPrintInvoiceForTheTest() {
         printInvoice = new PrintInvoice();
+        invoice = new Invoice();
     }
 
 
@@ -98,9 +102,9 @@ public class PrintInvoiceTest {
     }
 
     @Test
-    public void testGenerateSummaryForOneProduct() {
+    public void testGenerateSummaryForOneOtherProduct() {
         Map<Product, Integer> products = new TreeMap<>();
-        Product TestProduct = new Product("TestProduct", new BigDecimal("100"), new BigDecimal("0.23"));
+        Product TestProduct = new OtherProduct("TestProduct", new BigDecimal("100"));
 
         invoice.addProduct(TestProduct);
 

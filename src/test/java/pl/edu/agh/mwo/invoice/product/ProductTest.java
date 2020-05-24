@@ -35,6 +35,17 @@ public class ProductTest {
         Assert.assertThat(new BigDecimal("108"), Matchers.comparesEqualTo(product.getPriceWithTax()));
     }
 
+    @Test
+    public void testPriceBottleOfWineWithExcise() {
+        Product product = new BottleOfWine("ElSol", new BigDecimal("100.0"));
+        Assert.assertThat(new BigDecimal("105.56"), Matchers.comparesEqualTo(product.getPrice()));
+    }
+
+    @Test    public void testPriceFuelCanisterWithExcise() {
+        Product product = new FuelCanister("Blaszak10L", new BigDecimal("100.0"));
+        Assert.assertThat(new BigDecimal("105.56"), Matchers.comparesEqualTo(product.getPrice()));
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testProductWithNullName() {
         new OtherProduct(null, new BigDecimal("100.0"));
