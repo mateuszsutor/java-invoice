@@ -44,7 +44,7 @@ public class PrintInvoiceTest {
 
     @Test
     public void testGenerateInvoiceTitle() {
-        String value = String.format("\n| %-4s | %-20s | %-5s | %14s | %8s | %16s |  %16s |\n",
+        String value = String.format("| %-4s | %-20s | %-5s | %14s | %8s | %16s |  %16s |",
                 "Id", "Nazwa produtku", "Ilość", "Cena Netto szt",
                 "Vat", "Wartość netto", "Wartość brutto");
         String generateHeader = printInvoice.generateHeader();
