@@ -121,4 +121,6 @@ public class InvoiceTest {
         int invoiceNumber2 = new Invoice().getInvoiceNumber();
         assertEquals(invoiceNumber + 1, invoiceNumber2);
     }
+
+
 }

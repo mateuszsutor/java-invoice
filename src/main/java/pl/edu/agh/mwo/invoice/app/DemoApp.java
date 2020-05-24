@@ -43,9 +43,9 @@ public class DemoApp {
 
         PrintInvoice printer = new PrintInvoice();
 
-        printer.printInvoice(invoice1);
+        System.out.println(printer.showInvoice(invoice1));
 
-        printer.printInvoice(invoice2);
+        printer.showInvoice(invoice2);
 
     }
 }
