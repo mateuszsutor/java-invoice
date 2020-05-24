@@ -82,7 +82,6 @@ public class PrintInvoice {
         String header = String.format("| %-4s | %-20s | %-5s | %14s | %8s | %16s |  %16s |",
                 "Id", "Nazwa produtku", "Ilość", "Cena Netto szt",
                 "Vat", "Wartość netto", "Wartość brutto");
-        StringBuilder generateHeader = new StringBuilder();
 
         return header;
     }
@@ -175,7 +174,7 @@ public class PrintInvoice {
         return summary;
     }
 
-    private String printSummary(Integer quantity, BigDecimal taxPercent,
+    public String printSummary(Integer quantity, BigDecimal taxPercent,
                                BigDecimal summaryNetValue,
                                BigDecimal summaryValueWithTax) {
 
