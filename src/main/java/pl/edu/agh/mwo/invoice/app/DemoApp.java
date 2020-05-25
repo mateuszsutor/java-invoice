@@ -1,5 +1,9 @@
 package pl.edu.agh.mwo.invoice.app;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
 import pl.edu.agh.mwo.invoice.Invoice;
 import pl.edu.agh.mwo.invoice.print.PrintInvoice;
@@ -33,9 +37,34 @@ public class DemoApp {
         invoice1.addProduct(product6);
 
         PrintInvoice printer = new PrintInvoice();
-        System.out.println(printer.showInvoice(invoice1));
+        String invoice = printer.showInvoice(invoice1);
 
 
+        String fileName = "invoiceDemo.txt";
 
+        File file = new File(fileName);
+
+        boolean fileExists = file.exists();
+        if (!fileExists) {
+            try {
+                fileExists = file.createNewFile();
+            } catch (IOException e) {
+                System.out.println("Nie udało się utworzyć pliku");
+            }
+        }
+
+        if (fileExists) {
+            System.out.println("Plik " + fileName + " istnieje lub został utworzony");
+        }
+
+        try (
+                FileWriter fileWriter = new FileWriter(fileName);
+                BufferedWriter writer = new BufferedWriter(fileWriter);
+        ) {
+            writer.write(invoice);
+        } catch (IOException e) {
+            System.err.println("Nie udało się zapisać pliku " + fileName);
+        }
     }
+
 }
